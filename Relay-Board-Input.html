@@ -1,0 +1,114 @@
+<script type="text/javascript">
+    var valuesData = [
+      {v:"1", t:"1"},
+      {v:"2", t:"2"},
+      {v:"3", t:"3"},
+      {v:"4", t:"4"},
+      {v:"5", t:"5"},
+      {v:"6", t:"6"},
+      {v:"7", t:"7"},
+      {v:"8", t:"8"},
+      {v:"9", t:"9"},
+      {v:"10", t:"10"},
+      {v:"11", t:"11"},
+      {v:"12", t:"12"},
+      {v:"13", t:"13"},
+      {v:"14", t:"14"},
+      {v:"15", t:"15"},
+      {v:"16", t:"16"},
+
+    ];
+
+    RED.nodes.registerType('Relay-Board-Input',{
+        category: 'MicroID Sdn Bhd',
+        color: '#cbf07d',
+        defaults: {
+          name: {value:""},
+          state: {value:"RELAY"},
+          board: {value:"MID16RELAY"},
+          MAC:{value:"16RELAY-0000"},
+          input:{value:"any"}
+        },
+        inputs:1,
+        outputs:1,
+        oneditprepare: function(index) {     
+            var node = this;  
+            $("#node-input-state").change(function() {
+                $('#node-input-input').empty()
+
+                if($("#node-input-state").prop('value')=="RELAY"){
+                    for (var i = 0; i < 16; i++) {
+                        var value = valuesData[i].v;
+                        var text = valuesData[i].t;
+                        $('#node-input-input').append($("<option></option>").attr("value", value).text(text));
+                    }
+                    if(node.input == "RESET"){node.input="any"}
+                }else{
+                    for (var i = 0; i < 2; i++) {
+                        var value = valuesData[i].v;
+                        var text = valuesData[i].t;
+                        $('#node-input-input').append($("<option></option>").attr("value", value).text(text));
+                    }
+                    $('#node-input-input').append($("<option></option>").attr("value", "RESET").text("RESET"));
+                    if(node.input >= 2){node.input="any"}
+                }
+
+                $('#node-input-input').append($("<option></option>").attr("value", "any").text("any"));
+                // selected value is also selected
+                this.input = node.input;
+                $('#node-input-input').val(node.input);
+            })
+  
+        },
+        oneditsave: function() {
+            
+            this.state = $('#node-input-state').prop('value');
+            this.input = $('#node-input-input').prop('value');
+            // $('#node-input-input').val(this.input);
+            // $('#node-input-state').val(this.state);
+        },
+        icon: "file.png",
+        label: function() {
+            // return this.name||"IO-Board";
+            return this.name || this.MAC + ":"+this.state+": " + this.input;
+        }
+    });
+
+
+
+</script>
+
+<script type="text/html" data-template-name="Relay-Board-Input">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-board"><i class="fa fa-microchip"></i> Device</label>
+        <select type="text" id="node-input-board" style="width: 300px;">
+            <option value="MID16RELAY">MID16RELAY</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-MAC"><i class="fa fa-cog"></i> MAC/ID</label>
+        <input type="text" id="node-input-MAC" placeholder="MAC">
+    </div>
+    <div class="form-row">
+        <label for="node-input-state"><i class="fa fa-lightbulb-o"></i> Type</label>
+        <select type="text" id="node-input-state" style="width: 150px;">
+            <option value="BUTTON">Button Trigger</option>
+            <option value="RELAY">Relay Change</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-input"><i class="fa fa-wrench"></i> Input</label>
+        <select type="text" id="node-input-input" style="width: 150px;">
+
+        </select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="Relay-Board-Input">
+    <p>A simple node that converts the message payloads into all Relay-Board characters</p>
+</script>
+
