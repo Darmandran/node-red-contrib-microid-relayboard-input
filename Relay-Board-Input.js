@@ -1,13 +1,14 @@
 
-var relayState = {
-    RLY1:"",RLY2:"",RLY3:"",RLY4:"",RLY5:"",
-    RLY6:"",RLY7:"",RLY8:"",RLY9:"",RLY10:"",
-    RLY11:"",RLY12:"",RLY13:"",RLY14:"",RLY15:"",RLY16:""
-};
+
 
 module.exports = function(RED) {
 
     function RelayBoardInputNode(config) {
+        var relayState = {
+            RLY1:"",RLY2:"",RLY3:"",RLY4:"",RLY5:"",
+            RLY6:"",RLY7:"",RLY8:"",RLY9:"",RLY10:"",
+            RLY11:"",RLY12:"",RLY13:"",RLY14:"",RLY15:"",RLY16:""
+        };
         RED.nodes.createNode(this,config);
         this.board = config.board;
         this.MAC = config.MAC;
@@ -26,8 +27,6 @@ module.exports = function(RED) {
             
             const {device,temp,status} = msg.payload
             if(msg.serverType === "listening"){
-                console.log("+++++++++++++======================")
-                console.log(msg)
                 if(state=="BUTTON"){
                     if((input==="any" && msg.payload.deviceShadow.buttonTrigger!=0)|| input == msg.payload.deviceShadow.buttonTrigger){
                         if(msg.payload.hasOwnProperty("deviceShadow.buttonState")){
